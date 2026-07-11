@@ -1,0 +1,327 @@
+{
+  "entities": {
+    "VisitorStats": {
+      "title": "VisitorStats",
+      "description": "Daily, monthly, and total visitor statistics",
+      "type": "object",
+      "properties": {
+        "today": {
+          "type": "integer",
+          "description": "Number of unique visitors today"
+        },
+        "month": {
+          "type": "integer",
+          "description": "Number of unique visitors this month"
+        },
+        "total": {
+          "type": "integer",
+          "description": "Total number of page visits"
+        },
+        "todayDate": {
+          "type": "string",
+          "description": "The date string representing today (YYYY-MM-DD)"
+        },
+        "monthDate": {
+          "type": "string",
+          "description": "The month string representing current month (YYYY-MM)"
+        }
+      },
+      "required": [
+        "today",
+        "month",
+        "total",
+        "todayDate",
+        "monthDate"
+      ]
+    },
+    "ActiveSession": {
+      "title": "ActiveSession",
+      "description": "Active user sessions for live tracking",
+      "type": "object",
+      "properties": {
+        "lastActive": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of the last active ping from the user"
+        }
+      },
+      "required": [
+        "lastActive"
+      ]
+    },
+    "NewsArticle": {
+      "title": "NewsArticle",
+      "description": "Custom news articles or events added by the admin",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "The title of the news article"
+        },
+        "summary": {
+          "type": "string",
+          "description": "A short summary of the article"
+        },
+        "content": {
+          "type": "string",
+          "description": "The full detail or description"
+        },
+        "date": {
+          "type": "string",
+          "description": "Date of publication (YYYY-MM-DD)"
+        },
+        "category": {
+          "type": "string",
+          "description": "Category of the article: أخبار, إعلانات, فعاليات"
+        },
+        "image": {
+          "type": "string",
+          "description": "An optional URL string for the cover image"
+        },
+        "views": {
+          "type": "integer",
+          "description": "Number of page views"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when this news article was created"
+        }
+      },
+      "required": [
+        "title",
+        "summary",
+        "content",
+        "date",
+        "category",
+        "createdAt"
+      ]
+    },
+    "AdmissionApplication": {
+      "title": "AdmissionApplication",
+      "description": "Admissions applications submitted by prospective students",
+      "type": "object",
+      "properties": {
+        "appId": {
+          "type": "string",
+          "description": "Generated tracking application code (ASW-2026-XXXX)"
+        },
+        "fullName": {
+          "type": "string",
+          "description": "Full name of the student"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Mobile contact number"
+        },
+        "address": {
+          "type": "string",
+          "description": "Residential address"
+        },
+        "receiptCode": {
+          "type": "string",
+          "description": "Special payment/receipt verification code confirming annual fee"
+        },
+        "paymentCycle": {
+          "type": "string",
+          "description": "Billing frequency (e.g., annual)"
+        },
+        "highSchoolGrad": {
+          "type": "string",
+          "description": "High school grade percentage or score"
+        },
+        "nationalId": {
+          "type": "string",
+          "description": "The 14-digit National Identification Number"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Preferred training or general remarks"
+        },
+        "status": {
+          "type": "string",
+          "description": "The status of the application: pending, approved, rejected"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of submission"
+        }
+      },
+      "required": [
+        "appId",
+        "fullName",
+        "phone",
+        "address",
+        "receiptCode",
+        "highSchoolGrad",
+        "nationalId",
+        "status",
+        "createdAt"
+      ]
+    },
+    "ExamSchedule": {
+      "title": "ExamSchedule",
+      "description": "Exam schedule items added by administrators",
+      "type": "object",
+      "properties": {
+        "academicYear": {
+          "type": "string",
+          "description": "Academic Level/Year (e.g., الفرقة الأولى, الفرقة الثانية, etc.)"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Course/Subject name"
+        },
+        "date": {
+          "type": "string",
+          "description": "Date of the exam (YYYY-MM-DD)"
+        },
+        "time": {
+          "type": "string",
+          "description": "Period / Hour of the exam (e.g., 09:00 - 11:00)"
+        },
+        "hall": {
+          "type": "string",
+          "description": "Exam hall / room location"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when this schedule was added"
+        }
+      },
+      "required": [
+        "academicYear",
+        "subject",
+        "date",
+        "time",
+        "createdAt"
+      ]
+    },
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile with role-based attributes",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "fullName": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["student", "professor"] },
+        "academicYear": { "type": "string" },
+        "studentId": { "type": "string" },
+        "department": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "fullName", "email", "role", "createdAt"]
+    },
+    "StudentGrade": {
+      "title": "StudentGrade",
+      "description": "Academic grades for students uploaded by professors",
+      "type": "object",
+      "properties": {
+        "studentId": { "type": "string" },
+        "studentName": { "type": "string" },
+        "subject": { "type": "string" },
+        "grade": { "type": "string" },
+        "score": { "type": "integer" },
+        "academicYear": { "type": "string" },
+        "professorId": { "type": "string" },
+        "professorName": { "type": "string" },
+        "term": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["studentId", "studentName", "subject", "grade", "score", "academicYear", "professorId", "createdAt"]
+    },
+    "StudentPayment": {
+      "title": "StudentPayment",
+      "description": "Tuition fees and payment dues for students",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "studentName": { "type": "string" },
+        "title": { "type": "string" },
+        "amount": { "type": "integer" },
+        "paid": { "type": "boolean" },
+        "dueDate": { "type": "string" },
+        "paidDate": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "studentName", "title", "amount", "paid", "createdAt"]
+    },
+    "CourseMaterial": {
+      "title": "CourseMaterial",
+      "description": "Academic files, links, or videos uploaded by professors",
+      "type": "object",
+      "properties": {
+        "subject": { "type": "string" },
+        "academicYear": { "type": "string" },
+        "title": { "type": "string" },
+        "type": { "type": "string", "enum": ["pdf", "video", "link", "text"] },
+        "url": { "type": "string" },
+        "description": { "type": "string" },
+        "professorId": { "type": "string" },
+        "professorName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["subject", "academicYear", "title", "type", "url", "professorId", "createdAt"]
+    },
+    "StudentResultBySeat": {
+      "title": "StudentResultBySeat",
+      "description": "Student exam results queried by seat number",
+      "type": "object",
+      "properties": {
+        "seatNumber": { "type": "string" },
+        "fullName": { "type": "string" },
+        "academicYear": { "type": "string" },
+        "department": { "type": "string" },
+        "percentage": { "type": "number" },
+        "status": { "type": "string" },
+        "grades": { "type": "array" }
+      },
+      "required": ["seatNumber", "fullName", "academicYear", "department", "status"]
+    }
+  },
+  "firestore": {
+    "visitor_stats/{docId}": {
+      "schema": "VisitorStats",
+      "description": "Stores global visitor counters"
+    },
+    "active_sessions/{sessionId}": {
+      "schema": "ActiveSession",
+      "description": "Stores active user real-time sessions"
+    },
+    "news_articles/{articleId}": {
+      "schema": "NewsArticle",
+      "description": "Stores custom news and events"
+    },
+    "admission_applications/{applicationId}": {
+      "schema": "AdmissionApplication",
+      "description": "Stores admissions/enrollment forms"
+    },
+    "exam_schedules/{scheduleId}": {
+      "schema": "ExamSchedule",
+      "description": "Stores exam schedules/dates"
+    },
+    "user_profiles/{userId}": {
+      "schema": "UserProfile",
+      "description": "Stores user roles and profiles"
+    },
+    "student_grades/{gradeId}": {
+      "schema": "StudentGrade",
+      "description": "Stores grades submitted by faculty"
+    },
+    "student_payments/{paymentId}": {
+      "schema": "StudentPayment",
+      "description": "Stores tuition fees and balance dues"
+    },
+    "course_materials/{materialId}": {
+      "schema": "CourseMaterial",
+      "description": "Stores lectures and digital content"
+    },
+    "student_results_by_seat/{resultId}": {
+      "schema": "StudentResultBySeat",
+      "description": "Stores student exam results queried by seat number"
+    }
+  }
+}

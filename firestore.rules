@@ -1,0 +1,98 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Safety Net (Default Deny Catch-All)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Anyone who has successfully signed in with a real Firebase Auth
+    // account AND has a matching document in /admins/{uid} is treated as
+    // institute staff (covers both the Admin Dashboard and the professor
+    // tools inside the Student Portal).
+    function isAdmin() {
+      return request.auth != null &&
+             exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // 0. Admins registry: a signed-in user may only read their OWN admin
+    //    record (needed so the app can check "am I an admin?" after login).
+    //    No one can read anyone else's record, and no one can write here
+    //    from the client — that's managed only via the Admin SDK setup
+    //    script or Firebase Console.
+    match /admins/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // 1. Visitor Stats: low-sensitivity counters, fine to leave open
+    match /visitor_stats/{docId} {
+      allow read, write: if true;
+    }
+
+    // 2. Active Sessions: same as above, used for the "live visitors" widget
+    match /active_sessions/{sessionId} {
+      allow read, write: if true;
+    }
+
+    // 3. News Articles: public read, only staff can create/edit/delete
+    match /news_articles/{articleId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 4. Admission Applications: anyone can submit; public can look up their
+    //    own application by appId/nationalId; only staff can edit or delete.
+    match /admission_applications/{applicationId} {
+      allow create: if true;
+      allow read: if true;
+      allow update, delete: if isAdmin();
+    }
+
+    // 5. Exam Schedules: public read, staff-only write
+    match /exam_schedules/{scheduleId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 6. User Profiles: any signed-in user can read profiles (needed for the
+    //    login-by-email lookup); a user may only write their own profile,
+    //    staff can write any profile.
+    match /user_profiles/{userId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin() || (isSignedIn() && request.auth.uid == userId);
+    }
+
+    // 7. Student Grades: signed-in users may read only their own grades;
+    //    staff can read/write everything.
+    match /student_grades/{gradeId} {
+      allow read: if isAdmin() || (isSignedIn() && resource.data.studentId == request.auth.uid);
+      allow write: if isAdmin();
+    }
+
+    // 8. Student Payments: same pattern as grades.
+    match /student_payments/{paymentId} {
+      allow read: if isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid);
+      allow write: if isAdmin();
+    }
+
+    // 9. Course Materials: any signed-in student/professor can read; only
+    //    staff can publish/edit/delete.
+    match /course_materials/{materialId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // 10. Student Results By Seat Number: public read (public exam-result
+    //     lookup), staff-only write.
+    match /student_results_by_seat/{resultId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

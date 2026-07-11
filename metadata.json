@@ -1,0 +1,8 @@
+{
+  "name": "Remix: Remix: Remix: المعهد العالي للخدمة الاجتماعية بأسوان",
+  "description": "البوابة الإلكترونية الذكية التفاعلية الرسمية للمعهد العالي للخدمة الاجتماعية بأسوان - تأسس عام 1975 م",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

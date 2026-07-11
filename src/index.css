@@ -1,0 +1,210 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Cairo", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  --color-primary: #1e3a8a;
+  --color-accent: #b45309;
+  --color-accent-hover: #92400e;
+  --color-navy-dark: #0f172a;
+}
+
+/* تخصيصات وتأثيرات بصرية إضافية تضفي لمسة من الاحترافية والأكاديمية */
+body {
+  font-family: var(--font-sans);
+  background-color: #f8fafc; /* slate-50 */
+}
+
+/* تنسيق للطباعة بحيث تخرج بيان الدرجات والنتائج الأكاديمية للطالب بشكل ممتاز خالٍ من الرؤوس والذيل للموقع */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+  header, footer, nav, .news-ticker, form, button, .no-print {
+    display: none !important;
+  }
+  #printable-result-card {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+}
+
+/* Accessibility Enhancement Rules */
+.high-contrast {
+  filter: contrast(1.3) saturate(1.15) !important;
+}
+
+.grayscale-mode {
+  filter: grayscale(1) !important;
+}
+
+.dyslexic-mode {
+  --font-sans: "JetBrains Mono", "Courier New", Courier, monospace !important;
+  font-family: var(--font-sans) !important;
+  letter-spacing: 0.08em !important;
+  word-spacing: 0.15em !important;
+}
+
+/* Ensure smooth transitions for font-size scale */
+html {
+  transition: font-size 0.2s ease-in-out;
+}
+
+/* Custom Dark Mode Theme Overrides */
+html.dark,
+html.dark body {
+  background-color: #0b0f19 !important;
+  color: #f1f5f9 !important;
+}
+
+html.dark .bg-white {
+  background-color: #111827 !important; /* gray-900 */
+}
+
+html.dark .bg-slate-50,
+html.dark .bg-gray-50,
+html.dark .bg-slate-50\/50,
+html.dark .bg-slate-50\/80,
+html.dark .bg-slate-100 {
+  background-color: #1f2937 !important; /* gray-800 */
+}
+
+/* Borders and lines */
+html.dark .border-slate-100,
+html.dark .border-slate-200,
+html.dark .border-gray-100,
+html.dark .border-gray-200,
+html.dark .border-gray-200\/50,
+html.dark .border-slate-200\/50,
+html.dark .divide-slate-100 > * {
+  border-color: #374151 !important; /* gray-700 */
+}
+
+/* Headings and primary text */
+html.dark .text-slate-900,
+html.dark .text-slate-800,
+html.dark .text-slate-700,
+html.dark .text-gray-900,
+html.dark .text-gray-800,
+html.dark .text-gray-700,
+html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark h5 {
+  color: #f3f4f6 !important; /* gray-100 */
+}
+
+/* Supporting or muted text */
+html.dark .text-slate-600,
+html.dark .text-slate-500,
+html.dark .text-gray-600,
+html.dark .text-gray-500,
+html.dark .text-slate-400,
+html.dark .text-gray-400 {
+  color: #9ca3af !important; /* gray-400 */
+}
+
+/* Specific component elements */
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background-color: #1f2937 !important;
+  color: #ffffff !important;
+  border-color: #374151 !important;
+}
+
+html.dark input::placeholder {
+  color: #6b7280 !important;
+}
+
+/* Header and navigation elements */
+html.dark header {
+  background-color: #111827 !important;
+  border-bottom-color: #1f2937 !important;
+}
+
+html.dark nav,
+html.dark nav.bg-white {
+  background-color: #111827 !important;
+  border-bottom-color: #374151 !important;
+}
+
+html.dark nav button {
+  color: #e5e7eb !important;
+}
+
+html.dark nav button:hover {
+  background-color: #1f2937 !important;
+  color: #ffffff !important;
+}
+
+/* Dropdown panels */
+html.dark .absolute.group-hover\:opacity-100 > div {
+  background-color: #111827 !important;
+  border-color: #374151 !important;
+}
+
+/* Shadow enhancements */
+html.dark .shadow-md,
+html.dark .shadow-xl,
+html.dark .shadow-2xl {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.6), 0 2px 4px -1px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Soft badge background adjustments in dark mode */
+html.dark .bg-emerald-50\/50,
+html.dark .bg-emerald-50,
+html.dark .bg-green-50 {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+  color: #34d399 !important;
+}
+
+html.dark .bg-blue-50/50,
+html.dark .bg-blue-50 {
+  background-color: rgba(59, 130, 246, 0.15) !important;
+  color: #60a5fa !important;
+}
+
+html.dark .bg-amber-50\/50,
+html.dark .bg-amber-50,
+html.dark .bg-yellow-50 {
+  background-color: rgba(245, 158, 11, 0.15) !important;
+  color: #fbbf24 !important;
+}
+
+html.dark .bg-red-50\/50,
+html.dark .bg-red-50 {
+  background-color: rgba(239, 68, 68, 0.15) !important;
+  color: #f87171 !important;
+}
+
+/* Support for Quick Actions boxes */
+html.dark .group.cursor-pointer.bg-white {
+  background-color: #111827 !important;
+}
+
+/* Modals background adjustment */
+html.dark .fixed.inset-0 .bg-white {
+  background-color: #111827 !important;
+  border-color: #374151 !important;
+  color: #ffffff !important;
+}
+
+/* Smooth transitions for theme-related elements (removed div and section to prevent GPU rendering trail/ghosting glitches on mobile devices) */
+body, header, nav, footer, button, input, select, textarea, .theme-transition {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Prevent GPU layer ghosting, duplicates, and rendering glitches on mobile GPUs/browsers */
+.notranslate,
+.tabular-nums,
+[translate="no"],
+.animate-pulse,
+.animate-ping,
+.animate-spin {
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000;
+  will-change: auto;
+}
+
