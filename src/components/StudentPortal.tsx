@@ -246,16 +246,41 @@ export default function StudentPortal() {
             if (docSnap.exists()) {
               setUserProfile(docSnap.data());
             } else {
+              // No user_profiles doc for this uid. Before assuming "student",
+              // check /admins/{uid} — that is the collection Firestore
+              // security rules actually trust (see isAdmin() in firestore.rules
+              // and scripts/setup-firebase.mjs, which only writes there).
+              // Without this check, any real admin account created via the
+              // setup script has no user_profiles doc and was silently
+              // downgraded to "student" here.
+              let resolvedRole: "student" | "admin" = "student";
+              try {
+                const adminDocSnap = await getDoc(doc(db, "admins", user.uid));
+                if (adminDocSnap.exists()) {
+                  resolvedRole = "admin";
+                }
+              } catch (adminCheckErr) {
+                console.warn("Could not verify admin status:", adminCheckErr);
+              }
+
               const fallbackProfile = {
                 uid: user.uid,
-                fullName: user.displayName || user.email?.split("@")[0] || "طالب معهد أسوان",
+                fullName: user.displayName || user.email?.split("@")[0] || (resolvedRole === "admin" ? "System Administrator" : "طالب معهد أسوان"),
                 email: user.email,
-                role: "student",
-                academicYear: "الفرقة الأولى",
-                department: "الخدمة الاجتماعية",
+                role: resolvedRole,
+                academicYear: resolvedRole === "student" ? "الفرقة الأولى" : "",
+                department: resolvedRole === "admin" ? "إدارة تكنولوجيا المعلومات" : "الخدمة الاجتماعية",
                 createdAt: new Date().toISOString()
               };
               setUserProfile(fallbackProfile);
+
+              // Persist it so future logins get an instant, correct read
+              // instead of re-deriving this every time.
+              try {
+                await setDoc(docRef, fallbackProfile);
+              } catch (persistErr) {
+                console.warn("Could not persist derived profile:", persistErr);
+              }
             }
           } catch (error: any) {
             if (isQuotaError(error)) {
@@ -3575,7 +3600,7 @@ export default function StudentPortal() {
               </div>
               <AdminDashboard />
             </div>
-          ) : (
+          ) : userProfile?.role === "professor" ? (
             
             /* ------------------------------------------------------------- */
             /* واجهة لوحة تحكم الأستاذ والدكاترة (Faculty Management System) */
@@ -3979,6 +4004,26 @@ export default function StudentPortal() {
 
               </div>
 
+            </div>
+          ) : (
+            /* ------------------------------------------------------------- */
+            /* حالة أمان احتياطية: دور غير معروف أو لم يتم تحميله بعد        */
+            /* Safety fallback: role missing/unrecognized — never silently   */
+            /* show a privileged dashboard for an unresolved role.           */
+            /* ------------------------------------------------------------- */
+            <div className="py-24 text-center space-y-4">
+              <div className="w-10 h-10 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+              <p className="text-xs text-slate-400 font-semibold">
+                {isAr
+                  ? "تعذر تحديد نوع الحساب. جاري إعادة المحاولة..."
+                  : "Could not determine account type. Retrying..."}
+              </p>
+              <button
+                onClick={handleLogout}
+                className="text-[11px] text-red-400 font-bold underline cursor-pointer"
+              >
+                {isAr ? "تسجيل الخروج" : "Log Out"}
+              </button>
             </div>
           )
         )}
