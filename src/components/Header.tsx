@@ -329,7 +329,7 @@ export default function Header({ currentTab, setTab, darkMode, setDarkMode }: He
               </div>
               <div className="text-right leading-tight">
                 <span className="block text-xs font-black text-primary">
-                  {lang === "ar" ? "معهد الخدمة الاجتماعية" : "Social Work Institute"}
+                  {lang === "ar" ? "المعهد العالي للخدمة الاجتماعية بأسوان" : "Social Work Institute"}
                 </span>
                 <span className="block text-[10px] font-bold text-accent">
                   {lang === "ar" ? "أسوان • تأسس ١٩٧٥" : "Aswan • Est. 1975"}
