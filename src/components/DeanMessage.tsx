@@ -197,11 +197,11 @@ export default function DeanMessage() {
                 {/* قسم المجالات */}
                 <div className="bg-slate-50/50 p-5 rounded-2xl border border-slate-100 hover:shadow-md transition-shadow">
                   <h5 className="font-extrabold text-sm text-primary border-b border-primary/10 pb-2 mb-3">قسم المجالات</h5>
-                  <ul className="space-y-1.5 text-xs text-slate-700 font-semibold">
+                  {/* <ul className="space-y-1.5 text-xs text-slate-700 font-semibold">
                     <li className="flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 bg-accent rounded-full shrink-0" />
                       <span>أ.د/ مصطفى محمود مصطفى — رئيس القسم وعميد المعهد</span>
-                    </li>
+                    </li> */}
                     <li className="flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 bg-slate-300 rounded-full shrink-0" />
                       <span>أ.م.د/ أحمد محمد عبد العزيز</span>
