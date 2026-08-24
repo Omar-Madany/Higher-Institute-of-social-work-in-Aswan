@@ -179,7 +179,7 @@ export default function Footer({ setTab, onAdminTrigger }: FooterProps) {
               <div className="rounded-xl overflow-hidden border border-slate-800 shadow-lg h-36 relative">
                 <iframe 
                   title={t("map_iframe_title")}
-                  src="https://maps.google.com/maps?q=%D8%A7%D9%84%D9%85%D8%B9%D9%87%D8%AF%20%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%8ي%20%D9%84%D9%84%D8%AE%D8%AF%D9%85%D8%A9%20%D8%A7%D9%84%D8%AC%D8%AA%D9%85%D8%A7%D8%B9%D9%8I%D8%A9%20%D8%A8%D8%A3%D8%B3%D9%88%D8%A7%D9%86&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                  src="https://maps.app.goo.gl/7M2APMzAY9yk69yM7"
                   className="w-full h-full border-0 absolute inset-0 filter invert contrast-[1.1] brightness-[0.9] saturate-[0.6]"
                   allowFullScreen={true}
                   loading="lazy"
