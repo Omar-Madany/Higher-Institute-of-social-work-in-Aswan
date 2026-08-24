@@ -177,15 +177,15 @@ export default function Footer({ setTab, onAdminTrigger }: FooterProps) {
             {/* الخريطة المصغرة الأنيقة */}
             <div className="pt-2">
               <div className="rounded-xl overflow-hidden border border-slate-800 shadow-lg h-36 relative">
-                <iframe 
-                  title={t("map_iframe_title")}
-                  src="https://maps.app.goo.gl/7M2APMzAY9yk69yM7"
-                  className="w-full h-full border-0 absolute inset-0 filter invert contrast-[1.1] brightness-[0.9] saturate-[0.6]"
-                  allowFullScreen={true}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                ></iframe>
-              </div>
+                 <iframe
+                    src="https://maps.app.goo.gl/o2u9NEKttse9Rrrv7"
+                    width="100%"
+                    height="450"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    title="Location on Google Maps"
+                  /></div>
               <a 
                 href="https://maps.app.goo.gl/7M2APMzAY9yk69yM7" 
                 target="_blank" 
