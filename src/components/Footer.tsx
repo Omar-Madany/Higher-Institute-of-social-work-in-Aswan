@@ -177,15 +177,14 @@ export default function Footer({ setTab, onAdminTrigger }: FooterProps) {
             {/* الخريطة المصغرة الأنيقة */}
             <div className="pt-2">
               <div className="rounded-xl overflow-hidden border border-slate-800 shadow-lg h-36 relative">
-                 <iframe
-                    src="https://maps.app.goo.gl/o2u9NEKttse9Rrrv7"
-                    width="100%"
-                    height="450"
-                    style={{ border: 0 }}
-                    allowFullScreen
-                    loading="lazy"
-                    title="Location on Google Maps"
-                  /></div>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3642.56873465368!2d32.8936542!3d24.0814871!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14367b52a9b2b16d%3A0xb495b2176c885514!2sAswan%20Higher%20Institution%20Of%20Social%20Work!5e0!3m2!1sen!2seg!4v1787558271827!5m2!1sen!2seg"
+                  width="600" 
+                  height="450" 
+                  style="border:0;" 
+                  allowfullscreen="" 
+                  loading="lazy" 
+                  referrerpolicy="strict-origin-when-cross-origin">
+                </iframe></div>
               <a 
                 href="https://maps.app.goo.gl/7M2APMzAY9yk69yM7" 
                 target="_blank" 
