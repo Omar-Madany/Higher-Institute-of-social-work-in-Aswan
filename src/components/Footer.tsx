@@ -26,12 +26,23 @@ export default function Footer({ setTab, onAdminTrigger }: FooterProps) {
           
           {/* العمود العريض: لوجو وشرح مع التأسيس والرسالة */}
           <div className="lg:col-span-5 space-y-4">
-            <div className="flex items-center gap-4">
-              <div className="bg-white p-1 rounded-full border border-accent flex items-center justify-center w-18 h-18 overflow-hidden bg-slate-50 shadow-inner">
+            <a 
+              href="#home"
+              onClick={(e) => {
+                e.preventDefault();
+                setTab("home");
+              }}
+              className="flex items-center gap-4 cursor-pointer group"
+            >
+              <div className="bg-white p-1 rounded-full border border-accent flex items-center justify-center w-18 h-18 overflow-hidden bg-slate-50 shadow-inner group-hover:scale-105 transition-transform">
                 {!logoFailed ? (
                   <img
                     src="/assets/images/3dlogo2.png"
-                    alt="Logo"
+                    alt={isAr ? "شعار المعهد العالي للخدمة الاجتماعية بأسوان" : "Aswan Higher Institute for Social Work Logo"}
+                    width={72}
+                    height={72}
+                    loading="lazy"
+                    decoding="async"
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-contain"
                     onError={() => setLogoFailed(true)}
@@ -41,14 +52,14 @@ export default function Footer({ setTab, onAdminTrigger }: FooterProps) {
                 )}
               </div>
               <div>
-                <h4 className="font-extrabold text-sm sm:text-base text-white tracking-tight">
+                <h4 className="font-extrabold text-sm sm:text-base text-white tracking-tight group-hover:text-accent transition-colors">
                   <span>{lang === "ar" ? INST_INFO.nameAr : INST_INFO.nameEn}</span>
                 </h4>
                 <p className="text-[10px] text-accent font-bold uppercase tracking-wider">
                   <span>{INST_INFO.nameEn}</span>
                 </p>
               </div>
-            </div>
+            </a>
             
             <p className="text-xs text-slate-300 leading-relaxed font-semibold">
               <span>{t("footer_description")}</span>
@@ -74,62 +85,88 @@ export default function Footer({ setTab, onAdminTrigger }: FooterProps) {
               <span>{t("footer_links_title")}</span>
               <span className="block w-10 h-0.5 bg-accent mt-1"></span>
             </h5>
-            <ul className="grid grid-cols-1 gap-2 text-xs font-semibold text-slate-300">
-              <li>
-                <button 
-                  onClick={() => setTab("home")} 
-                  className="hover:text-accent transition-colors flex items-center gap-1 cursor-pointer text-right"
-                >
-                  <ChevronIcon className="w-3.5 h-3.5 text-accent shrink-0" />
-                  <span>{t("footer_links_home")}</span>
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => setTab("about")} 
-                  className="hover:text-accent transition-colors flex items-center gap-1 cursor-pointer text-right"
-                >
-                  <ChevronIcon className="w-3.5 h-3.5 text-accent shrink-0" />
-                  <span>{t("footer_links_about")}</span>
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => setTab("departments")} 
-                  className="hover:text-accent transition-colors flex items-center gap-1 cursor-pointer text-right"
-                >
-                  <ChevronIcon className="w-3.5 h-3.5 text-accent shrink-0" />
-                  <span>{t("footer_links_depts")}</span>
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => setTab("programs")} 
-                  className="hover:text-accent transition-colors flex items-center gap-1 cursor-pointer text-right"
-                >
-                  <ChevronIcon className="w-3.5 h-3.5 text-accent shrink-0" />
-                  <span>{t("nav_programs")}</span>
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => setTab("portal")} 
-                  className="hover:text-accent transition-colors flex items-center gap-1 cursor-pointer text-right"
-                >
-                  <ChevronIcon className="w-3.5 h-3.5 text-accent shrink-0" />
-                  <span>{t("footer_links_portal")}</span>
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => setTab("contact")} 
-                  className="hover:text-accent transition-colors flex items-center gap-1 cursor-pointer text-right"
-                >
-                  <ChevronIcon className="w-3.5 h-3.5 text-accent shrink-0" />
-                  <span>{t("footer_links_contact")}</span>
-                </button>
-              </li>
-            </ul>
+            <nav aria-label={isAr ? "روابط سريعة بالموقع" : "Footer quick links"}>
+              <ul className="grid grid-cols-1 gap-2 text-xs font-semibold text-slate-300">
+                <li>
+                  <a 
+                    href="#home"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setTab("home");
+                    }} 
+                    className="hover:text-accent transition-colors flex items-center gap-1 cursor-pointer text-right"
+                  >
+                    <ChevronIcon className="w-3.5 h-3.5 text-accent shrink-0" />
+                    <span>{t("footer_links_home")}</span>
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    href="#about"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setTab("about");
+                    }} 
+                    className="hover:text-accent transition-colors flex items-center gap-1 cursor-pointer text-right"
+                  >
+                    <ChevronIcon className="w-3.5 h-3.5 text-accent shrink-0" />
+                    <span>{t("footer_links_about")}</span>
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    href="#departments"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setTab("departments");
+                    }} 
+                    className="hover:text-accent transition-colors flex items-center gap-1 cursor-pointer text-right"
+                  >
+                    <ChevronIcon className="w-3.5 h-3.5 text-accent shrink-0" />
+                    <span>{t("footer_links_depts")}</span>
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    href="#programs"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setTab("programs");
+                    }} 
+                    className="hover:text-accent transition-colors flex items-center gap-1 cursor-pointer text-right"
+                  >
+                    <ChevronIcon className="w-3.5 h-3.5 text-accent shrink-0" />
+                    <span>{t("nav_programs")}</span>
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    href="#portal"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setTab("portal");
+                    }} 
+                    className="hover:text-accent transition-colors flex items-center gap-1 cursor-pointer text-right"
+                  >
+                    <ChevronIcon className="w-3.5 h-3.5 text-accent shrink-0" />
+                    <span>{t("footer_links_portal")}</span>
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    href="#contact"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setTab("contact");
+                    }} 
+                    className="hover:text-accent transition-colors flex items-center gap-1 cursor-pointer text-right"
+                  >
+                    <ChevronIcon className="w-3.5 h-3.5 text-accent shrink-0" />
+                    <span>{t("footer_links_contact")}</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
           </div>
 
           {/* العمود الثالث: بيانات وتفاصيل الاتصال الرسمية بالجنوب */}
@@ -138,7 +175,7 @@ export default function Footer({ setTab, onAdminTrigger }: FooterProps) {
               <span>{t("footer_contact_title")}</span>
               <span className="block w-10 h-0.5 bg-accent mt-1"></span>
             </h5>
-            <div className="space-y-3.5 text-xs text-slate-300 font-semibold leading-relaxed">
+            <address className="not-italic space-y-3.5 text-xs text-slate-300 font-semibold leading-relaxed">
               <div className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-accent shrink-0 mt-0.5" />
                 <span>{t("footer_contact_address")}</span>
@@ -152,9 +189,9 @@ export default function Footer({ setTab, onAdminTrigger }: FooterProps) {
                 </span>
               </div>
 
-              <div className="flex items-center gap-2" dir="rtl">
+              <div className="flex items-center gap-2" dir="ltr">
                 <Mail className="w-4 h-4 text-accent shrink-0" />
-                <a href={`mailto:${INST_INFO.email}`} className="text-accent hover:underline font-bold" >
+                <a href={`mailto:${INST_INFO.email}`} className="text-accent hover:underline font-bold">
                   {INST_INFO.email}
                 </a>
               </div>
@@ -172,19 +209,19 @@ export default function Footer({ setTab, onAdminTrigger }: FooterProps) {
                   </a>
                 </div>
               )}
-            </div>
+            </address>
 
             {/* الخريطة المصغرة الأنيقة */}
             <div className="pt-2">
               <div className="rounded-xl overflow-hidden border border-slate-800 shadow-lg h-36 relative">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3642.56873465368!2d32.8936542!3d24.0814871!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14367b52a9b2b16d%3A0xb495b2176c885514!2sAswan%20Higher%20Institution%20Of%20Social%20Work!5e0!3m2!1sen!2seg!4v1787558271827!5m2!1sen!2seg"
-                  className="w-full h-full"
-                  style={{ border: 0 }}
+                <iframe 
+                  title={t("map_iframe_title")}
+                  src="https://maps.google.com/maps?q=%D8%A7%D9%84%D9%85%D8%B9%D9%87%D8%AF%20%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%8ي%20%D9%84%D9%84%D8%AE%D8%AF%D9%85%D8%A9%20%D8%A7%D9%84%D8%AC%D8%AA%D9%85%D8%A7%D8%B9%D9%8I%D8%A9%20%D8%A8%D8%A3%D8%B3%D9%88%D8%A7%D9%86&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                  className="w-full h-full border-0 absolute inset-0 filter invert contrast-[1.1] brightness-[0.9] saturate-[0.6]"
+                  allowFullScreen={true}
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="Aswan Higher Institution of Social Work"
-                />
+                ></iframe>
               </div>
               <a 
                 href="https://maps.app.goo.gl/7M2APMzAY9yk69yM7" 
