@@ -4,7 +4,7 @@ import { INST_INFO } from "../data";
 import MapLocation from "./MapLocation";
 import { useLanguage } from "../context/LanguageContext";
 
-const COMPLAINT_PHONE = "PUT_PHONE_NUMBER_HERE";
+const COMPLAINT_PHONE = "+20 097 2457032";
 
 export default function ContactUs() {
   const { lang } = useLanguage();
