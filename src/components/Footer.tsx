@@ -189,9 +189,9 @@ export default function Footer({ setTab, onAdminTrigger }: FooterProps) {
                 </span>
               </div>
 
-              <div className="flex items-center gap-2" dir="ltr">
+              <div className="flex items-center gap-2" dir="rtl">
                 <Mail className="w-4 h-4 text-accent shrink-0" />
-                <a href={`mailto:${INST_INFO.email}`} className="text-accent hover:underline font-bold">
+                <a href={`mailto:${INST_INFO.email}`} className="text-accent hover:underline font-bold" dir="ltr">
                   {INST_INFO.email}
                 </a>
               </div>
