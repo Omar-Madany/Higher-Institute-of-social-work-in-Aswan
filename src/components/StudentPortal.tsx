@@ -8,7 +8,7 @@ import {
 import { useLanguage } from "../context/LanguageContext";
 import { 
   collection, addDoc, getDocs, query, where, updateDoc, 
-  doc, setDoc, getDoc, deleteDoc, onSnapshot 
+  doc, setDoc, getDoc, deleteDoc, onSnapshot, limit 
 } from "firebase/firestore";
 import { 
   createUserWithEmailAndPassword, 
@@ -775,29 +775,36 @@ export default function StudentPortal() {
 
     setResultSearchLoading(true);
     try {
-      if (sessionStorage.getItem("aswan_inst_firestore_quota_exceeded") === "true") {
-        if (DEFAULT_RESULTS_BY_SEAT[queryStr]) {
-          setResultSearchResult(DEFAULT_RESULTS_BY_SEAT[queryStr]);
-        } else {
-          setResultSearchError(isAr 
-            ? "عذراً، رقم الجلوس هذا غير مسجل حالياً في النتائج المعتمدة. يرجى مراجعة الرقم أو المحاولة لاحقاً." 
-            : "This seat number was not found in the approved results database. Please check and try again."
+      // (No session-wide "quota exceeded" shortcut here: a single document read is
+      // cheap, and skipping Firestore made real uploaded results invisible for the
+      // rest of the tab session whenever ANY component had hit a quota error.)
+
+      // 1. البحث في Firestore. نجرّب كل صيغ التخزين الممكنة بالترتيب:
+      //    أ) مستند باسم seat_<رقم>   ب) مستند باسم <رقم> فقط
+      //    ج) مستندات قديمة بمعرّف عشوائي: بحث بحقل seatNumber (limit 1 فقط)
+      const readResultDoc = async (docId: string) => {
+        const snap = await getDoc(doc(db, "student_results_by_seat", docId));
+        return snap.exists() ? { id: snap.id, ...snap.data() } : null;
+      };
+
+      let foundResult: any = await readResultDoc(`seat_${queryStr}`);
+      if (!foundResult) foundResult = await readResultDoc(queryStr);
+      if (!foundResult) {
+        const candidates: (string | number)[] = [queryStr];
+        if (/^\d+$/.test(queryStr)) candidates.push(Number(queryStr));
+        for (const value of candidates) {
+          const byField = await getDocs(
+            query(collection(db, "student_results_by_seat"), where("seatNumber", "==", value), limit(1))
           );
+          if (!byField.empty) {
+            foundResult = { id: byField.docs[0].id, ...byField.docs[0].data() };
+            break;
+          }
         }
-        setResultSearchLoading(false);
-        return;
       }
 
-      // 1. الاستعلام من قاعدة بيانات Firestore أولاً لضمان الديناميكية عند رفع الإكسيل
-      // قراءة مباشرة لمستند واحد (get) بدلاً من استعلام قائمة (list) حتى تبقى قواعد الأمان
-      // مانعة لتحميل كل النتائج دفعة واحدة. المستندات تُحفظ باسم seat_<رقم الجلوس>.
-      let resultSnap = await getDoc(doc(db, "student_results_by_seat", `seat_${queryStr}`));
-      if (!resultSnap.exists()) {
-        resultSnap = await getDoc(doc(db, "student_results_by_seat", queryStr));
-      }
-
-      if (resultSnap.exists()) {
-        setResultSearchResult({ id: resultSnap.id, ...resultSnap.data() });
+      if (foundResult) {
+        setResultSearchResult(foundResult);
       } else {
         // 2. الفحص في البيانات المسبقة التجريبية محلياً إذا لم توجد في فايرستور
         if (DEFAULT_RESULTS_BY_SEAT[queryStr]) {
