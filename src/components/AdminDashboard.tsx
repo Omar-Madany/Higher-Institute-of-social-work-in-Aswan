@@ -462,6 +462,34 @@ export default function AdminDashboard() {
   }, []);
 
   // دالة استيراد وتعبئة نتائج الطلاب جماعياً
+  // Checks, BEFORE writing, that this browser holds a real Firebase Auth session
+  // for a user listed in /admins/{uid}. Returns a readable problem or null.
+  const adminWritePreflight = async (): Promise<string | null> => {
+    const user = auth.currentUser;
+    if (!user) {
+      return isAr
+        ? "أنت غير مسجّل الدخول في Firebase. اضغط تسجيل الخروج ثم ادخل بإيميل وكلمة مرور حساب الأدمن الحقيقي (وليس رمز المرور السريع)."
+        : "You are not signed in to Firebase. Log out, then sign in with the real admin account email and password.";
+    }
+    const isRegisteredAdmin = await checkIsRegisteredAdmin(user.uid);
+    if (!isRegisteredAdmin) {
+      return isAr
+        ? `الحساب ${user.email} (UID: ${user.uid}) مسجّل الدخول لكنه ليس أدمن. أنشئ مستنداً في مجموعة admins برقم المستند ${user.uid} داخل قاعدة (default).`
+        : `Signed in as ${user.email} (UID: ${user.uid}) but this account is not an admin. Create a document in the "admins" collection with ID ${user.uid} in the (default) database.`;
+    }
+    return null;
+  };
+
+  const describeWriteError = (err: any): string => {
+    if (err?.code === "permission-denied") {
+      const uid = auth.currentUser?.uid || "?";
+      return isAr
+        ? `قواعد Firestore رفضت الكتابة رغم أنك أدمن (UID: ${uid}). انشر ملف firestore.rules على مشروع higher-institute (قاعدة (default)) ثم أعد المحاولة.`
+        : `Firestore rules rejected the write although you are an admin (UID: ${uid}). Deploy firestore.rules to project higher-institute (database (default)) and retry.`;
+    }
+    return err?.message || String(err);
+  };
+
   const handleImportStudentsList = async (studentsToImport: { seatNumber: string; fullName: string; status: string }[]) => {
     if (studentsToImport.length === 0) {
       alert(isAr ? "لا توجد بيانات للاستيراد." : "No data to import.");
@@ -475,6 +503,9 @@ export default function AdminDashboard() {
     setShowSeedingSuccess(false);
 
     try {
+      const preflightProblem = await adminWritePreflight();
+      if (preflightProblem) throw new Error(preflightProblem);
+
       let count = 0;
       let batch = writeBatch(db);
 
@@ -518,7 +549,7 @@ export default function AdminDashboard() {
       setShowSeedingSuccess(true);
     } catch (err: any) {
       console.error("Failed to seed students:", err);
-      alert(isAr ? `فشل عملية الاستيراد: ${err.message}` : `Import failed: ${err.message}`);
+      alert(isAr ? `فشل عملية الاستيراد: ${describeWriteError(err)}` : `Import failed: ${describeWriteError(err)}`);
     } finally {
       setIsSeedingActive(false);
     }
@@ -1188,6 +1219,9 @@ export default function AdminDashboard() {
     setExcelImportSuccess(false);
 
     try {
+      const preflightProblem = await adminWritePreflight();
+      if (preflightProblem) throw new Error(preflightProblem);
+
       let count = 0;
       let batch = writeBatch(db);
 
@@ -1215,7 +1249,7 @@ export default function AdminDashboard() {
       setParsedGrades([]);
     } catch (err: any) {
       console.error("Failed to save excel grades:", err);
-      setExcelImportError(isAr ? `فشل تخزين الدرجات في Firestore: ${err.message}` : `Failed to save grades in Firestore: ${err.message}`);
+      setExcelImportError(isAr ? `فشل تخزين الدرجات في Firestore: ${describeWriteError(err)}` : `Failed to save grades in Firestore: ${describeWriteError(err)}`);
     } finally {
       setIsSavingExcelGrades(false);
     }

@@ -763,7 +763,11 @@ export default function StudentPortal() {
     setResultSearchError("");
     setResultSearchResult(null);
 
-    const queryStr = seatNumber.trim();
+    // Accept Arabic-Indic digits (٠-٩) and ignore spaces.
+    const queryStr = seatNumber
+      .trim()
+      .replace(/[٠-٩]/g, (d) => String("٠١٢٣٤٥٦٧٨٩".indexOf(d)))
+      .replace(/\s+/g, "");
     if (!queryStr) {
       setResultSearchError(isAr ? "يرجى كتابة رقم الجلوس للاستعلام." : "Please enter your seat number.");
       return;
@@ -785,12 +789,15 @@ export default function StudentPortal() {
       }
 
       // 1. الاستعلام من قاعدة بيانات Firestore أولاً لضمان الديناميكية عند رفع الإكسيل
-      const q = query(collection(db, "student_results_by_seat"), where("seatNumber", "==", queryStr));
-      const querySnapshot = await getDocs(q);
+      // قراءة مباشرة لمستند واحد (get) بدلاً من استعلام قائمة (list) حتى تبقى قواعد الأمان
+      // مانعة لتحميل كل النتائج دفعة واحدة. المستندات تُحفظ باسم seat_<رقم الجلوس>.
+      let resultSnap = await getDoc(doc(db, "student_results_by_seat", `seat_${queryStr}`));
+      if (!resultSnap.exists()) {
+        resultSnap = await getDoc(doc(db, "student_results_by_seat", queryStr));
+      }
 
-      if (!querySnapshot.empty) {
-        const docData = querySnapshot.docs[0].data();
-        setResultSearchResult({ id: querySnapshot.docs[0].id, ...docData });
+      if (resultSnap.exists()) {
+        setResultSearchResult({ id: resultSnap.id, ...resultSnap.data() });
       } else {
         // 2. الفحص في البيانات المسبقة التجريبية محلياً إذا لم توجد في فايرستور
         if (DEFAULT_RESULTS_BY_SEAT[queryStr]) {
@@ -821,6 +828,10 @@ export default function StudentPortal() {
         // Fallback to local demo in case of network issue
         if (DEFAULT_RESULTS_BY_SEAT[queryStr]) {
           setResultSearchResult(DEFAULT_RESULTS_BY_SEAT[queryStr]);
+        } else if (err?.code === "permission-denied") {
+          setResultSearchError(isAr
+            ? "تعذر قراءة النتيجة: قواعد قاعدة البيانات لا تسمح بقراءة النتائج حالياً. يرجى إبلاغ إدارة المعهد."
+            : "Could not read the result: database rules currently block reading results. Please notify the institute.");
         } else {
           setResultSearchError(isAr ? "حدث خطأ أثناء الاتصال بالخادم." : "Error connecting to server.");
         }
